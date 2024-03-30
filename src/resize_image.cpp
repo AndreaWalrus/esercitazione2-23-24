@@ -9,15 +9,7 @@ using namespace std;
 // returns the nearest neighbor to pixel (x,y,c)
 float Image::pixel_nearest(float x, float y, int c) const
   {
-  // Since you are inside class Image you can
-  // use the member function pixel(a,b,c)
-  
-  // TODO: Your code here
-  
-  NOT_IMPLEMENTED();
-  
-  
-  return 0;
+  return clamped_pixel(round(x),round(y),c);
   }
 
 // HW1 #1
@@ -45,8 +37,7 @@ float Image::pixel_bilinear(float x, float y, int c) const
 Image nearest_resize(const Image& im, int w, int h)
   {
   Image ret(w,h,im.c);
-  
-  // TODO: Your code here
+ 
   
   NOT_IMPLEMENTED();
   
