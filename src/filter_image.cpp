@@ -161,11 +161,15 @@ Image make_emboss_filter() {
 // float sigma: sigma for the gaussian filter
 // returns basic gaussian filter
 Image make_gaussian_filter(float sigma) {
-    // TODO: Implement the filter
-    NOT_IMPLEMENTED();
-
-    return Image(1, 1, 1);
-
+    int size = 6*sigma+1;
+    Image mask(size,size,1);
+    for(int j=0; j<mask.h; j++){
+        for(int i=0; i<mask.w; i++){
+            float val = (1/(2*M_PI*sigma*sigma))*exp(-(pow((i-size/2),2)+pow((j-size/2),2))/(2*sigma*sigma)); 
+            mask.set_pixel(i,j,0,val);
+        }
+    }
+    return mask;
 }
 
 
