@@ -1,9 +1,13 @@
 .idea/*
+.vscode/*
 cmake-build-debug/*
 output/*
 build/*
 test0
 test1
+
+# Test images
+aborto*.jpg
 
 # Prerequisites
 *.d

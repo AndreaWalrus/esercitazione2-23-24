@@ -41,8 +41,8 @@ Image nearest_resize(const Image& im, int w, int h)
   for(int c=0; c<ret.c; c++){
     for(int j=0; j<h; j++){
       for(int i=0; i<w; i++){
-        float x_interpolated = (float)((float)i/w)*im.w;
-        float y_interpolated = (float)((float)j/h)*im.h;
+        float x_interpolated = -0.5+((i+0.5)/w)*im.w;
+        float y_interpolated = -0.5+((j+0.5)/h)*im.h;
         float val = im.pixel_nearest(x_interpolated,y_interpolated,c);
         ret.set_pixel(i,j,c,val);
       }
