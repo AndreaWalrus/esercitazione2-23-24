@@ -106,31 +106,55 @@ Image convolve_image_fast(const Image &im, const Image &filter, bool preserve) {
 // HW1 #2.3
 // returns basic 3x3 high-pass filter
 Image make_highpass_filter() {
-    // TODO: Implement the filter
-    NOT_IMPLEMENTED();
+    Image mask(3,3,1);
+    
+    mask.set_pixel(0,0,0,0);
+    mask.set_pixel(1,0,0,-1);
+    mask.set_pixel(2,0,0,0);
+    mask.set_pixel(0,1,0,-1);
+    mask.set_pixel(1,1,0,4);
+    mask.set_pixel(2,1,0,-1);
+    mask.set_pixel(0,2,0,0);
+    mask.set_pixel(1,2,0,-1);
+    mask.set_pixel(2,2,0,0);
 
-    return Image(1, 1, 1);
-
+    return mask;
 }
 
 // HW1 #2.3
 // returns basic 3x3 sharpen filter
 Image make_sharpen_filter() {
-    // TODO: Implement the filter
-    NOT_IMPLEMENTED();
-
-    return Image(1, 1, 1);
-
+    Image mask(3,3,1);
+    
+    mask.set_pixel(0,0,0,0);
+    mask.set_pixel(1,0,0,-1);
+    mask.set_pixel(2,0,0,0);
+    mask.set_pixel(0,1,0,-1);
+    mask.set_pixel(1,1,0,5);
+    mask.set_pixel(2,1,0,-1);
+    mask.set_pixel(0,2,0,0);
+    mask.set_pixel(1,2,0,-1);
+    mask.set_pixel(2,2,0,0);
+    
+    return mask;
 }
 
 // HW1 #2.3
 // returns basic 3x3 emboss filter
 Image make_emboss_filter() {
-    // TODO: Implement the filter
-    NOT_IMPLEMENTED();
-
-    return Image(1, 1, 1);
-
+    Image mask(3,3,1);
+    
+    mask.set_pixel(0,0,0,-2);
+    mask.set_pixel(1,0,0,-1);
+    mask.set_pixel(2,0,0,0);
+    mask.set_pixel(0,1,0,-1);
+    mask.set_pixel(1,1,0,1);
+    mask.set_pixel(2,1,0,1);
+    mask.set_pixel(0,2,0,0);
+    mask.set_pixel(1,2,0,1);
+    mask.set_pixel(2,2,0,2);
+    
+    return mask;
 }
 
 // HW1 #2.4
