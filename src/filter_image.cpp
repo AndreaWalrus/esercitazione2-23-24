@@ -10,11 +10,14 @@
 // HW1 #2.1
 // Image& im: image to L1-normalize
 void l1_normalize(Image &im) {
-
-    // TODO: Normalize each channel
-    NOT_IMPLEMENTED();
-
-
+    float val = 1/(float)(im.w*im.h);
+    for(int c=0; c<im.c; c++){
+        for(int j=0; j<im.h; j++){
+            for(int i=0; i<im.w; i++){
+                im.set_pixel(i,j,c,val);
+            }
+        }
+    }
 }
 
 // HW1 #2.1
@@ -22,11 +25,14 @@ void l1_normalize(Image &im) {
 // returns the filter Image of size WxW
 Image make_box_filter(int w) {
     assert(w % 2); // w needs to be odd
-
-    // TODO: Implement the filter
-    NOT_IMPLEMENTED();
-
-    return Image(1, 1, 1);
+    Image mask(w,w,1);
+    for(int j=0; j<mask.h; j++){
+        for(int i=0; i<mask.w; i++){
+            mask.set_pixel(i,j,0,1);
+        }
+    }
+    l1_normalize(mask);
+    return mask;
 }
 
 // HW1 #2.2
@@ -37,15 +43,44 @@ Image make_box_filter(int w) {
 Image convolve_image(const Image &im, const Image &filter, bool preserve) {
     assert(filter.c == 1);
     Image ret;
-    // This is the case when we need to use the function clamped_pixel(x,y,c).
-    // Otherwise you'll have to manually check whether the filter goes out of bounds
+    
+    if(preserve){
+        ret = Image(im.w,im.h,im.c);
+        for(int c=0; c<ret.c; c++){
+            for(int j=0; j<ret.h; j++){
+                for(int i=0; i<ret.w; i++){
+                    float q=0;
+                    int x_s = i-filter.w/2;
+                    int y_s = j-filter.h/2;
+                    for(int j_m=0; j_m<filter.h; j_m++){
+                        for(int i_m=0; i_m<filter.w; i_m++){
+                            q += filter.clamped_pixel(i_m,j_m,0)*im.clamped_pixel(x_s+i_m,y_s+j_m,c);
+                        }
+                    }
+                    ret.set_pixel(i,j,c,q);
+                }
+            }
+        }
+    }else{
+        ret = Image(im.w,im.h,1);
+        for(int j=0; j<ret.h; j++){
+            for(int i=0; i<ret.w; i++){
+                float q=0;
+                int x_s = i-filter.w/2;
+                int y_s = j-filter.h/2;
+                for(int j_m=0; j_m<filter.h; j_m++){
+                    for(int i_m=0; i_m<filter.w; i_m++){
+                        q += filter.clamped_pixel(i_m,j_m,0)*im.clamped_pixel(x_s+i_m,y_s+j_m,0);
+                        q += filter.clamped_pixel(i_m,j_m,0)*im.clamped_pixel(x_s+i_m,y_s+j_m,1);
+                        q += filter.clamped_pixel(i_m,j_m,0)*im.clamped_pixel(x_s+i_m,y_s+j_m,2);
+                    }
+                }
+                ret.set_pixel(i,j,0,q);
+            }
+        }
+    }
 
-    // TODO: Make sure you set the sizes of ret properly. Use ret=Image(w,h,c) to reset ret
-    // TODO: Do the convolution operator
-    NOT_IMPLEMENTED();
-
-    // Make sure to return ret and not im. This is just a placeholder
-    return im;
+    return ret;
 }
 
 // HW1 #2.2+ Fast convolution
