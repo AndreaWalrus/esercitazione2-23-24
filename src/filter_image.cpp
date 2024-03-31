@@ -181,11 +181,15 @@ Image add_image(const Image &a, const Image &b) {
     assert(a.w == b.w && a.h == b.h &&
            a.c == b.c); // assure images are the same size
 
-    // TODO: Implement addition
-    NOT_IMPLEMENTED();
-
-    return a;
-
+    Image ret(a.w,a.h,a.c);
+    for(int c=0; c<ret.c; c++){
+        for(int j=0; j<ret.h; j++){
+            for(int i=0; i<ret.w; i++){
+                ret.set_pixel(i,j,c,a.clamped_pixel(i,j,c)+b.clamped_pixel(i,j,c));
+            }
+        }
+    }
+    return ret;
 }
 
 // HW1 #3
@@ -196,11 +200,15 @@ Image sub_image(const Image &a, const Image &b) {
     assert(a.w == b.w && a.h == b.h &&
            a.c == b.c); // assure images are the same size
 
-    // TODO: Implement subtraction
-    NOT_IMPLEMENTED();
-
-    return a;
-
+    Image ret(a.w,a.h,a.c);
+    for(int c=0; c<ret.c; c++){
+        for(int j=0; j<ret.h; j++){
+            for(int i=0; i<ret.w; i++){
+                ret.set_pixel(i,j,c,a.clamped_pixel(i,j,c)-b.clamped_pixel(i,j,c));
+            }
+        }
+    }
+    return ret;
 }
 
 // HW1 #4.1
