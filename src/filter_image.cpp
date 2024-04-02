@@ -214,19 +214,37 @@ Image sub_image(const Image &a, const Image &b) {
 // HW1 #4.1
 // returns basic GX filter
 Image make_gx_filter() {
-    // TODO: Implement the filter
-    NOT_IMPLEMENTED();
-
-    return Image(1, 1, 1);
+   Image mask(3,3,1);
+    
+    mask.set_pixel(0,0,0,-1);
+    mask.set_pixel(1,0,0,0);
+    mask.set_pixel(2,0,0,1);
+    mask.set_pixel(0,1,0,-2);
+    mask.set_pixel(1,1,0,0);
+    mask.set_pixel(2,1,0,2);
+    mask.set_pixel(0,2,0,-1);
+    mask.set_pixel(1,2,0,0);
+    mask.set_pixel(2,2,0,1);
+    
+    return mask;
 }
 
 // HW1 #4.1
 // returns basic GY filter
 Image make_gy_filter() {
-    // TODO: Implement the filter
-    NOT_IMPLEMENTED();
-
-    return Image(1, 1, 1);
+    Image mask(3,3,1);
+    
+    mask.set_pixel(0,0,0,-1);
+    mask.set_pixel(1,0,0,-2);
+    mask.set_pixel(2,0,0,-1);
+    mask.set_pixel(0,1,0,0);
+    mask.set_pixel(1,1,0,0);
+    mask.set_pixel(2,1,0,0);
+    mask.set_pixel(0,2,0,1);
+    mask.set_pixel(1,2,0,2);
+    mask.set_pixel(2,2,0,1);
+    
+    return mask;
 }
 
 // HW1 #4.2
