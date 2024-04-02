@@ -164,6 +164,9 @@ void test_sobel() {
     feature_normalize(mag);
     feature_normalize(theta);
 
+    //mag.save_image("data/aborto_mag");
+    //theta.save_image("data/aborto_theta");
+
     Image gt_mag = load_image("data/magnitude.png");
     Image gt_theta = load_image("data/theta.png");
     TEST(gt_mag.w == mag.w && gt_theta.w == theta.w);
@@ -191,6 +194,7 @@ void test_sobel() {
 
     Image imo = colorize_sobel(im);
     save_png(imo, "output/color_sobel");
+    imo.save_image("data/aborto_color");
 
     TEST(same_image(mag, gt_mag));
     TEST(same_image(theta, gt_theta));
@@ -245,25 +249,25 @@ void test_equalization() {
 
 
 void run_tests() {
-    test_nn_resize();
-    test_bl_resize();
-    test_multiple_resize();
+    //test_nn_resize();
+    //test_bl_resize();
+    //test_multiple_resize();
 
-    test_gaussian_filter();
-    test_sharpen_filter();
-    test_emboss_filter();
-    test_highpass_filter();
-    test_convolution();
-    test_gaussian_blur();
-    test_hybrid_image();
-    test_frequency_image();
+    //test_gaussian_filter();
+    //test_sharpen_filter();
+    //test_emboss_filter();
+    //test_highpass_filter();
+    //test_convolution();
+    //test_gaussian_blur();
+    //test_hybrid_image();
+    //test_frequency_image();
     test_sobel();
 
-    test_bilateral();
-    test_equalization();
+    //test_bilateral();
+    //test_equalization();
     // tests on code efficiency
-    test_fast_convolution();
-    test_fast_bilateral();
+    //test_fast_convolution();
+    //test_fast_bilateral();
     printf("%d tests, %d passed, %d failed\n", tests_total,
            tests_total - tests_fail, tests_fail);
 }

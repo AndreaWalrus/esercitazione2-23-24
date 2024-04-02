@@ -325,11 +325,37 @@ pair<Image, Image> sobel_image(const Image &im) {
 // const Image& im: input image
 // returns the colorized Sobel image of the same size
 Image colorize_sobel(const Image &im) {
+    Image mask = make_gaussian_filter(4);
+    Image res = convolve_image(im,mask,true);
 
-    // TODO: Your code here
-    NOT_IMPLEMENTED();
+    pair<Image,Image> ret = sobel_image(res);
+    Image mag = ret.first;
+    Image theta = ret.second;
+    
+    feature_normalize(mag);
 
-    return im;
+    for(int j=0; j<theta.h; j++){
+        for(int i=0; i<theta.w; i++){
+            float val = (theta.clamped_pixel(i,j,0)/(2*M_PI))+0.5;
+            theta.set_pixel(i,j,0,val);
+        }
+    }
+
+    Image color(im.w,im.h,im.c);
+
+    for(int j=0; j<im.h; j++){
+        for(int i=0; i<im.w; i++){
+            float mag_val = mag.clamped_pixel(i,j,0);
+            float theta_val = theta.clamped_pixel(i,j,0);
+            color.set_pixel(i,j,0,theta_val);
+            color.set_pixel(i,j,1,mag_val);
+            color.set_pixel(i,j,2,mag_val);
+        }
+    }
+
+    hsv_to_rgb(color);
+
+    return color;
 }
 
 
