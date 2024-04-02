@@ -252,9 +252,28 @@ Image make_gy_filter() {
 void feature_normalize(Image &im) {
     assert(im.w * im.h); // assure we have non-empty image
 
-    // TODO: Normalize the features for each channel
-    NOT_IMPLEMENTED();
-
+    float max=0;
+    float min=1;
+    for(int c=0; c<im.c; c++){
+        for(int j=0; j<im.h; j++){
+            for(int i=0; i<im.w; i++){
+                float val = im.clamped_pixel(i,j,c);
+                if(val>max) max=val;
+                if(val<min) min=val;
+            }
+        }
+    }
+    for(int c=0; c<im.c; c++){
+        for(int j=0; j<im.h; j++){
+            for(int i=0; i<im.w; i++){
+                if(max==min) im.set_pixel(i,j,c,0);
+                else{
+                    float val = (im.clamped_pixel(i,j,c)-min)/(max-min);
+                    im.set_pixel(i,j,c,val);
+                }
+            }
+        }
+    }
 }
 
 
@@ -278,10 +297,27 @@ void feature_normalize_total(Image &im) {
 // Image& im: input image
 // return a pair of images of the same size
 pair<Image, Image> sobel_image(const Image &im) {
-    // TODO: Your code here
-    NOT_IMPLEMENTED();
+    Image mask_x = make_gx_filter();
+    Image mask_y = make_gy_filter();
+    Image G_x = convolve_image(im,mask_x,false);
+    Image G_y = convolve_image(im,mask_y,false);
 
-    return {im, im};
+    Image mag(im.w,im.h,1);
+    Image theta(im.w,im.h,1);
+
+    for(int j=0; j<im.h; j++){
+        for(int i=0; i<im.w; i++){
+            float x_val = G_x.clamped_pixel(i,j,0);
+            float y_val = G_y.clamped_pixel(i,j,0);
+            float mag_val = sqrt(x_val*x_val+y_val*y_val);
+            float theta_val = atan2(y_val,x_val);
+            mag.set_pixel(i,j,0,mag_val);
+            theta.set_pixel(i,j,0,theta_val);
+        }
+    }
+    
+
+    return {mag, theta};
 }
 
 
