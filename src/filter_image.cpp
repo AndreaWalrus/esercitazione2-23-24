@@ -364,12 +364,9 @@ Image colorize_sobel(const Image &im) {
 // float sigma1,sigma2: the two sigmas for bilateral filter
 // returns the result of applying bilateral filtering to im
 Image bilateral_filter(const Image &im, float sigma1, float sigma2) {
-    Image bf = im;
+    int size = 6*sigma1+1;
 
-    // TODO: Your bilateral code
-    NOT_IMPLEMENTED();
-
-    return bf;
+    return Image();
 }
 
 // HW1 #4.5+ Fast bilateral filter
@@ -393,9 +390,18 @@ float *compute_histogram(const Image &im, int ch, int num_bins) {
         hist[i] = 0;
     }
 
-    // TODO: Your histogram code
-    NOT_IMPLEMENTED();
+    for(int j=0; j<im.h; j++){
+        for(int i=0; i<im.w; i++){
+            int index = im.clamped_pixel(i,j,ch)*num_bins-1;
+            hist[index]=hist[index]+1;
+        }
+    }
 
+    for(int i=0; i<num_bins; i++){
+        int size = im.w*im.h;
+        hist[i]=hist[i]/size;
+    }
+    
     return hist;
 }
 
@@ -404,46 +410,44 @@ float *compute_CDF(float *hist, int num_bins) {
 
     cdf[0] = hist[0];
 
-    // TODO: Your cdf code
-    NOT_IMPLEMENTED();
+    for(int i=1; i<num_bins; i++){
+        cdf[i]=cdf[i-1]+hist[i];
+    }
 
     return cdf;
 }
 
 Image histogram_equalization_hsv(const Image &im, int num_bins) {
     Image new_im(im);
-    float eps = 1.0 / (num_bins * 1000);
+    rgb_to_hsv(new_im);
 
-    // TODO: Your histogram equalization code
-    NOT_IMPLEMENTED();
-    // convert to hsv
-    // compute histograms for the luminance channel
-    // compute cdf
-    // equalization
-    // convert back to rgb
+    float* cdf = compute_CDF(compute_histogram(new_im, 2, num_bins), num_bins);
+    for(int j=0; j<im.h; j++){
+        for(int i=0; i<im.w; i++){
+            int index = new_im.clamped_pixel(i,j,2)*num_bins-1;
+            new_im.set_pixel(i,j,2,cdf[index]);
+        }
+    }
+    delete(cdf);
 
-    // delete the allocated memory!
-//    delete hist;
-//    delete cdf;
-
+    hsv_to_rgb(new_im);
     return new_im;
 }
 
 Image histogram_equalization_rgb(const Image &im, int num_bins) {
     Image new_im(im);
-    float eps = 1.0 / (num_bins * 1000);
 
-    // compute histograms for each color channel
     for (int c = 0; c < im.c; ++c) {
-
-        // TODO: Your equalization code
-        NOT_IMPLEMENTED();
-
-        // delete the allocated memory!
-//        delete hist;
-//        delete cdf;
+        float* cdf = compute_CDF(compute_histogram(im, c, num_bins), num_bins);
+        for(int j=0; j<im.h; j++){
+            for(int i=0; i<im.w; i++){
+                int index = im.clamped_pixel(i,j,c)*num_bins-1;
+                new_im.set_pixel(i,j,c,cdf[index]);
+            }
+        }
+        delete(cdf);
     }
-
+    
     return new_im;
 }
 
